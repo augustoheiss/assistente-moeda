@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Função da Moeda - Dashboard Automotivo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { background-color: #0f172a; color: #e2e8f0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .glass-panel { background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 1rem; backdrop-filter: blur(10px); }
+        
+        /* Regras de Impressão */
+        @media print {
+            @page { size: landscape; margin: 15mm; }
+            body { background: #ffffff !important; color: #000000 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            .no-print { display: none !important; }
+            .glass-panel { 
+                background: #f8fafc !important; border: 2px solid #cbd5e1 !important; 
+                box-shadow: none !important; border-radius: 8px !important;
+                page-break-inside: avoid !important; break-inside: avoid !important;
+                margin-bottom: 20px !important; color: #000000 !important;
+            }
+            .grid { display: flex !important; flex-wrap: wrap !important; gap: 15px !important; }
+            .md\:grid-cols-3 > div { width: calc(33.333% - 10px) !important; flex: 1 1 auto; }
+            .lg\:col-span-3 { width: 68% !important; }
+            .lg\:grid-cols-4 > div:last-child { width: 30% !important; }
+            canvas { min-height: 250px !important; max-height: 300px !important; width: 100% !important; max-width: 100% !important; }
+            h1, h2, h3, p, span, td, th, label { color: #0f172a !important; }
+            .text-emerald-400 { color: #059669 !important; font-weight: 800 !important; }
+            .text-rose-400 { color: #e11d48 !important; font-weight: 800 !important; }
+            .text-amber-400 { color: #d97706 !important; font-weight: 800 !important; }
+            .text-blue-400 { color: #2563eb !important; font-weight: 800 !important; }
+            select { border: none !important; appearance: none; background: transparent !important; color: #0f172a !important; font-weight: bold; padding: 0 !important; }
+            table, th, td { border-color: #cbd5e1 !important; }
+        }
+    </style>
+</head>
+<body class="p-6 md:p-12">
+
+    <div class="no-print flex justify-end mb-6">
+        <button onclick="window.print()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 px-6 rounded-lg shadow-lg transition-colors flex items-center gap-2">
+            Exportar Relatório (PDF)
+        </button>
+    </div>
+
+    <header class="mb-10 text-center">
+        <h1 class="text-4xl font-bold text-emerald-400 mb-2">A Função da Moeda</h1>
+        <p class="text-slate-400 italic font-semibold">"O segundo atual e o segundo seguinte. Deixando o dinheiro no lugar dele."</p>
+    </header>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+        <div class="glass-panel p-6 text-center w-full">
+            <h3 class="text-lg text-slate-300">Custo Anual (Veículo)</h3>
+            <p class="text-3xl font-bold text-rose-400">R$ 38.000,00</p>
+        </div>
+        <div class="glass-panel p-6 text-center w-full">
+            <h3 class="text-lg text-slate-300">Meta Semanal</h3>
+            <p class="text-3xl font-bold text-amber-400">R$ 730,76</p>
+        </div>
+        <div class="glass-panel p-6 text-center w-full">
+            <h3 class="text-lg text-slate-300">Meta Diária</h3>
+            <p class="text-3xl font-bold text-emerald-400">R$ 104,10</p>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-10">
+        <div class="glass-panel p-6 lg:col-span-3">
+            <div class="flex flex-col sm:flex-row justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-white">Fluxo Diário e Dinâmica</h2>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <select id="mesSelect" class="bg-slate-800 text-emerald-400 p-2 rounded border border-slate-600 outline-none" onchange="atualizarDashboard()"></select>
+                </div>
+            </div>
+            <div class="relative h-[400px] w-full">
+                <canvas id="pagamentosChart"></canvas>
+            </div>
+        </div>
+
+        <div class="glass-panel p-4 flex flex-col justify-between space-y-2">
+            
+            <h3 class="text-emerald-500 font-bold uppercase tracking-widest text-xs mb-1">Métricas do Mês</h3>
+            <div><p class="text-[10px] text-slate-400 uppercase">Bruto Mensal</p><p class="text-lg font-bold text-emerald-400" id="m_bruto_mensal">R$ 0,00</p></div>
+            <div><p class="text-[10px] text-slate-400 uppercase">Bruto Última Semana</p><p class="text-lg font-bold text-emerald-400" id="m_bruto_semanal">R$ 0,00</p></div>
+            <div class="flex justify-between"><div class="w-1/2"><p class="text-[10px] text-slate-400 uppercase">Média Diária</p><p class="text-sm font-bold text-slate-300" id="m_media_diaria">R$ 0</p></div><div class="w-1/2"><p class="text-[10px] text-slate-400 uppercase">Média Semanal</p><p class="text-sm font-bold text-slate-300" id="m_media_semanal">R$ 0</p></div></div>
+            
+            <div class="h-px w-full bg-slate-700 my-2 no-print"></div>
+            
+            <h3 class="text-blue-500 font-bold uppercase tracking-widest text-xs mb-1">Métricas do Ano</h3>
+            <div><p class="text-[10px] text-slate-400 uppercase">Bruto Anual</p><p class="text-lg font-bold text-blue-400" id="m_bruto_anual">R$ 0,00</p></div>
+            <div class="flex justify-between"><div class="w-1/2"><p class="text-[10px] text-slate-400 uppercase">Média Mensal</p><p class="text-sm font-bold text-slate-300" id="m_media_mensal_ano">R$ 0</p></div><div class="w-1/2"><p class="text-[10px] text-slate-400 uppercase">Média Semanal</p><p class="text-sm font-bold text-slate-300" id="m_media_semanal_ano">R$ 0</p></div></div>
+            
+            <div class="h-px w-full bg-slate-700 my-2 no-print"></div>
+
+            <h3 class="text-amber-500 font-bold uppercase tracking-widest text-xs mb-1">Globais (Todos os Anos)</h3>
+            <div><p class="text-[10px] text-slate-400 uppercase">Bruto de Todos os Tempos</p><p class="text-lg font-bold text-amber-400" id="m_bruto_global">R$ 0,00</p></div>
+            <div class="flex justify-between"><div class="w-1/2"><p class="text-[10px] text-slate-400 uppercase">Média Anual</p><p class="text-sm font-bold text-slate-300" id="m_media_anual_global">R$ 0</p></div><div class="w-1/2"><p class="text-[10px] text-slate-400 uppercase">Média Mensal</p><p class="text-sm font-bold text-slate-300" id="m_media_mensal_global">R$ 0</p></div></div>
+
+        </div>
+    </div>
+
+    <div class="glass-panel p-6 mb-10">
+        <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+            <div>
+                <h2 class="text-2xl font-bold text-white">A Força dos Juros Compostos (6 Anos)</h2>
+            </div>
+            <div class="mt-4 md:mt-0 flex items-center gap-3">
+                <label for="aporteSelect" class="text-slate-300 font-bold">Aporte Mensal:</label>
+                <select id="aporteSelect" class="bg-slate-800 text-blue-400 font-bold p-2 rounded border border-slate-600 outline-none" onchange="atualizarGraficoInvestimentos()">
+                    <option value="1000">R$ 1.000</option>
+                    <option value="1500">R$ 1.500</option>
+                    <option value="2000" selected>R$ 2.000</option>
+                    <option value="2500">R$ 2.500</option>
+                    <option value="3000">R$ 3.000</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="grid grid-cols-3 gap-4 mb-6 text-center border-b border-slate-700 pb-4">
+            <div><p class="text-sm text-slate-400 font-bold">Total Depositado (72 meses)</p><p class="text-xl font-bold text-slate-300" id="resumoDepositado">R$ 0,00</p></div>
+            <div><p class="text-sm text-slate-400 font-bold">Total de Juros Ganhos</p><p class="text-xl font-bold text-blue-400" id="resumoJuros">R$ 0,00</p></div>
+            <div><p class="text-sm text-slate-400 font-bold">Patrimônio Final</p><p class="text-xl font-bold text-emerald-400" id="resumoFinal">R$ 0,00</p></div>
+        </div>
+        <div class="relative h-80 w-full"><canvas id="investimentosChart"></canvas></div>
+    </div>
+
+    <div class="glass-panel p-6">
+        <h2 class="text-2xl font-bold text-white mb-2" id="tabelaTitulo">Relatório de Pagamentos</h2>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse" style="page-break-inside: auto;">
+                <thead style="display: table-header-group;">
+                    <tr class="border-b border-slate-600 text-slate-400">
+                        <th class="p-3 font-bold">Data</th><th class="p-3 font-bold">Descrição</th><th class="p-3 font-bold">Valor Pago</th><th class="p-3 font-bold">Meta Diária</th><th class="p-3 font-bold">Status</th>
+                    </tr>
+                </thead>
+                <tbody id="tabelaPagamentosBody" class="text-slate-300" style="display: table-row-group;"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const formatarMoeda = (valor) => valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        const corTextoGrafico = '#64748b'; 
+        const despesaDiaria = 104.10;
+
+        let db = null;
+        let pagamentosChart = null;
+        let investimentosChart = null;
+
+        // 1. CARREGAR OS DADOS DO JSON
+        async function iniciarSistema() {
+            try {
+                const response = await fetch('dados_processados.json');
+                db = await response.json();
+                
+                popularFiltros();
+                atualizarDashboard();
+            } catch (error) {
+                console.error("Erro na investigação:", error);
+                alert("🕵️ Sherlock: Não consegui encontrar o arquivo JSON! Verifique o console.");
+            }
+        }
+
+        function popularFiltros() {
+            const mesSelect = document.getElementById('mesSelect');
+            mesSelect.innerHTML = '';
+            
+            const chavesMeses = Object.keys(db.meses).sort().reverse();
+            
+            chavesMeses.forEach(chave => {
+                const option = document.createElement('option');
+                option.value = chave;
+                option.textContent = chave;
+                mesSelect.appendChild(option);
+            });
+        }
+
+        // 2. A MÁGICA DE ATUALIZAR TUDO NA TELA
+        function atualizarDashboard() {
+            if(!db) return;
+
+            const chaveMesSelecionado = document.getElementById('mesSelect').value;
+            const anoSelecionado = chaveMesSelecionado.substring(0, 4);
+
+            const dadosMes = db.meses[chaveMesSelecionado];
+            const dadosAno = db.anos[anoSelecionado];
+            const dadosGeral = db.geral;
+
+            // PREENCHER PAINEL LATERAL
+            document.getElementById('m_bruto_mensal').innerText = formatarMoeda(dadosMes.bruto_mensal);
+            document.getElementById('m_bruto_semanal').innerText = formatarMoeda(dadosMes.bruto_ultima_semana);
+            document.getElementById('m_media_diaria').innerText = formatarMoeda(dadosMes.media_diaria_mes);
+            document.getElementById('m_media_semanal').innerText = formatarMoeda(dadosMes.media_semanal_mes);
+            
+            document.getElementById('m_bruto_anual').innerText = formatarMoeda(dadosAno.bruto_anual);
+            document.getElementById('m_media_mensal_ano').innerText = formatarMoeda(dadosAno.media_mensal_anual);
+            document.getElementById('m_media_semanal_ano').innerText = formatarMoeda(dadosAno.media_semanal_anual);
+            
+            document.getElementById('m_bruto_global').innerText = formatarMoeda(dadosGeral.bruto_total);
+            document.getElementById('m_media_anual_global').innerText = formatarMoeda(dadosGeral.media_anual_global);
+            document.getElementById('m_media_mensal_global').innerText = formatarMoeda(dadosGeral.media_mensal_global);
+
+            // DESENHAR O GRÁFICO 1 E A TABELA
+            document.getElementById('tabelaTitulo').innerText = `Relatório de Pagamentos - ${chaveMesSelecionado}`;
+            
+            const dataObjeto = new Date(anoSelecionado, parseInt(chaveMesSelecionado.substring(5,7)), 0);
+            const totalDiasMes = dataObjeto.getDate();
+
+            const labelsDias = [];
+            const dadosValores = [];
+            const linhaMeta = [];
+            
+            const tbody = document.getElementById('tabelaPagamentosBody');
+            tbody.innerHTML = '';
+
+            for(let dia = 1; dia <= totalDiasMes; dia++) {
+                const diaStr = String(dia).padStart(2, '0');
+                const dataChave = `${chaveMesSelecionado}-${diaStr}`;
+                
+                const valorDia = dadosMes.pagamentos_diarios[dataChave] || 0;
+                
+                labelsDias.push([`Dia ${dia}`, valorDia > 0 ? formatarMoeda(valorDia) : '-']);
+                dadosValores.push(valorDia);
+                linhaMeta.push(despesaDiaria);
+
+                if(valorDia > 0) {
+                    const tr = document.createElement('tr');
+                    tr.className = "border-b border-slate-700/50";
+                    const statusHtml = valorDia >= despesaDiaria 
+                        ? `<span class="text-emerald-500 font-bold uppercase text-[10px]">Meta Batida</span>`
+                        : `<span class="text-rose-500 font-bold uppercase text-[10px]">Abaixo</span>`;
+                    tr.innerHTML = `
+                        <td class="p-3 font-bold">${diaStr}/${chaveMesSelecionado.substring(5,7)}/${anoSelecionado}</td>
+                        <td class="p-3">Serviço/Repasse</td>
+                        <td class="p-3 text-emerald-500 font-bold">${formatarMoeda(valorDia)}</td>
+                        <td class="p-3 font-medium">${formatarMoeda(despesaDiaria)}</td>
+                        <td class="p-3">${statusHtml}</td>`;
+                    tbody.appendChild(tr);
+                }
+            }
+
+            const ctx = document.getElementById('pagamentosChart').getContext('2d');
+            if(pagamentosChart) pagamentosChart.destroy();
+            
+            pagamentosChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labelsDias,
+                    datasets: [
+                        { 
+                            label: 'Recebido no Dia', 
+                            data: dadosValores, 
+                            borderColor: '#10b981', 
+                            backgroundColor: 'rgba(16, 185, 129, 0.2)', 
+                            borderWidth: 3, 
+                            tension: 0.4, 
+                            fill: true, 
+                            pointBackgroundColor: '#10b981', 
+                            pointRadius: 3 
+                        },
+                        { 
+                            label: 'Meta Diária (Despesa)', 
+                            data: linhaMeta, 
+                            borderColor: '#e11d48', 
+                            borderWidth: 2, 
+                            borderDash: [5, 5], 
+                            tension: 0, 
+                            pointRadius: 0, 
+                            fill: false 
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true, 
+                    maintainAspectRatio: false, 
+                    animation: false,
+                    plugins: { 
+                        legend: { labels: { color: corTextoGrafico, font: { weight: 'bold' } } } 
+                    },
+                    scales: {
+                        x: { ticks: { color: corTextoGrafico, font: { size: 10, weight: 'bold' } }, grid: { color: 'rgba(100,116,139,0.1)' } },
+                        y: { ticks: { color: corTextoGrafico, font: { weight: 'bold' } }, grid: { color: 'rgba(100,116,139,0.1)' }, min: 0 }
+                    }
+                }
+            });
+        }
+
+        // 3. GRÁFICO DE INVESTIMENTOS
+        function atualizarGraficoInvestimentos() {
+            const aporte = parseFloat(document.getElementById('aporteSelect').value);
+            const meses = 72; 
+            const taxa = 0.0083; 
+            
+            let labelsMeses = [];
+            let dadosAporteMensal = [];
+            let dadosRendimentoDoMes = [];
+            let montanteTotal = 0;
+            let totalDepositado = 0;
+
+            for(let i = 1; i <= meses; i++) {
+                labelsMeses.push(`Mês ${i}`);
+                totalDepositado += aporte; 
+                montanteTotal += aporte;
+                
+                let rendimentoNesteMes = montanteTotal * taxa;
+                montanteTotal += rendimentoNesteMes;
+                
+                dadosAporteMensal.push(aporte); 
+                dadosRendimentoDoMes.push(rendimentoNesteMes);
+            }
+
+            document.getElementById('resumoDepositado').innerText = formatarMoeda(totalDepositado);
+            document.getElementById('resumoJuros').innerText = formatarMoeda(montanteTotal - totalDepositado);
+            document.getElementById('resumoFinal').innerText = formatarMoeda(montanteTotal);
+            
+            const ctxInvestimentos = document.getElementById('investimentosChart').getContext('2d');
+            if(investimentosChart) investimentosChart.destroy();
+            
+            investimentosChart = new Chart(ctxInvestimentos, {
+                type: 'line',
+                data: {
+                    labels: labelsMeses,
+                    datasets: [
+                        { 
+                            label: 'Depósito Mensal (Esforço)', 
+                            data: dadosAporteMensal, 
+                            borderColor: '#64748b', 
+                            borderWidth: 2, 
+                            borderDash: [5, 5], 
+                            tension: 0, 
+                            fill: false, 
+                            pointRadius: 0 
+                        },
+                        { 
+                            label: 'Rendimento NO MÊS', 
+                            data: dadosRendimentoDoMes, 
+                            borderColor: '#2563eb', 
+                            backgroundColor: 'rgba(37, 99, 235, 0.2)', 
+                            borderWidth: 3, 
+                            tension: 0.4, 
+                            fill: true, 
+                            pointRadius: 0 
+                        }
+                    ]
+                },
+                options: { 
+                    responsive: true, 
+                    maintainAspectRatio: false, 
+                    animation: false, 
+                    interaction: { mode: 'index', intersect: false }, 
+                    plugins: { 
+                        legend: { labels: { color: corTextoGrafico, font: { weight: 'bold' } } } 
+                    }, 
+                    scales: { 
+                        x: { ticks: { color: corTextoGrafico, font: { weight: 'bold' } }, grid: { display: false } }, 
+                        y: { ticks: { color: corTextoGrafico, font: { weight: 'bold' } }, grid: { color: 'rgba(100,116,139,0.1)' } } 
+                    } 
+                }
+            });
+        }
+
+        // INICIALIZA O SISTEMA
+        atualizarGraficoInvestimentos();
+        iniciarSistema();
+    </script>
+</body>
+</html>
