@@ -20,3 +20,10 @@ Este projeto foi criado para garantir que a moeda faça a função dela: trabalh
 ***Projeção de Futuro***: Utiliza dados projetados para os próximos 3 anos, permitindo visualizar não apenas o que foi pago, mas como o acúmulo de capital muda o jogo no segundo seguinte.
 
 Hoje, com a tecnologia e a IA à nossa disposição, construir essa vitrine de dados é simples. O verdadeiro desafio — e o objetivo deste projeto — é criar as conexões lógicas que sempre foram importantes, respeitando o passado que nos trouxe até aqui, para usar bem os recursos que temos nas mãos hoje.
+
+## 🧠 Converse com o Projeto (Motor RAG)
+Hoje nós temos livros e mais livros que não acabam. O mundo está cheio de ruído. Mas graças à Inteligência Artificial, temos uma máquina capaz de extrair sinais precisos e nos ajudar de forma específica somente naquilo que nos interessa.
+
+Este e outros projetos saíram do chão 100% com o apoio da IA. Portanto, nós não vamos escrever mais um manual extenso para você ler. Se você gostou da estrutura, quer entender a matemática por trás ou tem dúvidas sobre como adaptar isso para a sua realidade, ***acesse gratuitamente o nosso chat local e converse com o Gemini.***
+
+A IA foi alimentada pela arquitetura RAG (Retrieval-Augmented Generation) utilizando os dados estáticos e a filosofia deste projeto. Faça perguntas sobre segurança financeira, sobre a sua necessidade pessoal ou sobre como ocultar os seus dados. Desenhe do zero o conhecimento necessário para o seu segundo atual e o segundo seguinte.
