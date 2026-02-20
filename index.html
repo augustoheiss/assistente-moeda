@@ -155,80 +155,106 @@
         </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-10">
-        <div class="glass-panel p-6 lg:col-span-3">
-            <div class="flex flex-col sm:flex-row justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold text-white">Fluxo Diário e Dinâmica</h2>
-                <div class="flex gap-4 mt-4 sm:mt-0">
-                    <select id="mesSelect"
-                        class="bg-slate-800 text-emerald-400 p-2 rounded border border-slate-600 outline-none"
-                        onchange="atualizarDashboard()"></select>
-                </div>
+    <div class="glass-panel p-6 mb-6">
+        <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-white">Fluxo Diário e Dinâmica</h2>
+            <div class="flex gap-3 mt-4 md:mt-0">
+                <select id="filtro-ano" onchange="atualizarDashboard()"
+                    class="bg-slate-800 text-emerald-400 p-2 rounded border border-slate-600 outline-none font-bold"></select>
+                <select id="filtro-mes" onchange="atualizarDashboard()"
+                    class="bg-slate-800 text-emerald-400 p-2 rounded border border-slate-600 outline-none font-bold"></select>
             </div>
-            <div class="relative h-[400px] w-full">
-                <canvas id="pagamentosChart"></canvas>
+        </div>
+        <div class="relative h-[400px] w-full">
+            <canvas id="pagamentosChart"></canvas>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+
+        <div class="glass-panel p-6 flex flex-col justify-between hover:border-emerald-500/50 transition-colors">
+            <h3
+                class="text-emerald-500 font-bold uppercase tracking-widest text-sm mb-4 border-b border-emerald-500/30 pb-2">
+                Métricas do Mês</h3>
+            <div class="space-y-4">
+                <div>
+                    <p class="text-[11px] text-slate-400 uppercase font-bold">Bruto Mensal</p>
+                    <p class="text-3xl font-bold text-emerald-400" id="m_bruto_mensal">R$ 0,00</p>
+                </div>
+                <div>
+                    <p class="text-[11px] text-slate-400 uppercase font-bold">Bruto Última Semana</p>
+                    <p class="text-xl font-bold text-emerald-400/80" id="m_bruto_semanal">R$ 0,00</p>
+                </div>
+                <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-700/50">
+                    <div>
+                        <p class="text-[10px] text-slate-400 uppercase font-bold">Média Semanal</p>
+                        <p class="text-lg font-bold text-slate-200" id="m_media_semanal">R$ 0</p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] text-slate-400 uppercase font-bold">Média Diária</p>
+                        <p class="text-lg font-bold text-slate-200" id="m_media_diaria">R$ 0</p>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="glass-panel p-4 flex flex-col justify-between space-y-2">
-
-            <h3 class="text-emerald-500 font-bold uppercase tracking-widest text-xs mb-1">Métricas do Mês</h3>
-            <div>
-                <p class="text-[10px] text-slate-400 uppercase">Bruto Mensal</p>
-                <p class="text-lg font-bold text-emerald-400" id="m_bruto_mensal">R$ 0,00</p>
-            </div>
-            <div>
-                <p class="text-[10px] text-slate-400 uppercase">Bruto Última Semana</p>
-                <p class="text-lg font-bold text-emerald-400" id="m_bruto_semanal">R$ 0,00</p>
-            </div>
-            <div class="flex justify-between">
-                <div class="w-1/2">
-                    <p class="text-[10px] text-slate-400 uppercase">Média Diária</p>
-                    <p class="text-sm font-bold text-slate-300" id="m_media_diaria">R$ 0</p>
+        <div class="glass-panel p-6 flex flex-col justify-between hover:border-blue-500/50 transition-colors">
+            <h3 class="text-blue-500 font-bold uppercase tracking-widest text-sm mb-4 border-b border-blue-500/30 pb-2">
+                Métricas do Ano</h3>
+            <div class="space-y-4">
+                <div>
+                    <p class="text-[11px] text-slate-400 uppercase font-bold">Bruto Anual</p>
+                    <p class="text-3xl font-bold text-blue-400" id="m_bruto_anual">R$ 0,00</p>
                 </div>
-                <div class="w-1/2">
-                    <p class="text-[10px] text-slate-400 uppercase">Média Semanal</p>
-                    <p class="text-sm font-bold text-slate-300" id="m_media_semanal">R$ 0</p>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <p class="text-[11px] text-slate-400 uppercase font-bold">Média Mensal</p>
+                        <p class="text-xl font-bold text-blue-400/80" id="m_media_mensal_ano">R$ 0</p>
+                    </div>
+                    <div>
+                        <p class="text-[11px] text-slate-400 uppercase font-bold">Média Semanal</p>
+                        <p class="text-xl font-bold text-blue-400/80" id="m_media_semanal_ano">R$ 0</p>
+                    </div>
                 </div>
-            </div>
-
-            <div class="h-px w-full bg-slate-700 my-2 no-print"></div>
-
-            <h3 class="text-blue-500 font-bold uppercase tracking-widest text-xs mb-1">Métricas do Ano</h3>
-            <div>
-                <p class="text-[10px] text-slate-400 uppercase">Bruto Anual</p>
-                <p class="text-lg font-bold text-blue-400" id="m_bruto_anual">R$ 0,00</p>
-            </div>
-            <div class="flex justify-between">
-                <div class="w-1/2">
-                    <p class="text-[10px] text-slate-400 uppercase">Média Mensal</p>
-                    <p class="text-sm font-bold text-slate-300" id="m_media_mensal_ano">R$ 0</p>
-                </div>
-                <div class="w-1/2">
-                    <p class="text-[10px] text-slate-400 uppercase">Média Semanal</p>
-                    <p class="text-sm font-bold text-slate-300" id="m_media_semanal_ano">R$ 0</p>
+                <div class="pt-2 border-t border-slate-700/50">
+                    <p class="text-[10px] text-slate-400 uppercase font-bold">Média Diária (Ano)</p>
+                    <p class="text-lg font-bold text-slate-200" id="m_media_diaria_ano">R$ 0</p>
                 </div>
             </div>
-
-            <div class="h-px w-full bg-slate-700 my-2 no-print"></div>
-
-            <h3 class="text-amber-500 font-bold uppercase tracking-widest text-xs mb-1">Globais (Todos os Anos)</h3>
-            <div>
-                <p class="text-[10px] text-slate-400 uppercase">Bruto de Todos os Tempos</p>
-                <p class="text-lg font-bold text-amber-400" id="m_bruto_global">R$ 0,00</p>
-            </div>
-            <div class="flex justify-between">
-                <div class="w-1/2">
-                    <p class="text-[10px] text-slate-400 uppercase">Média Anual</p>
-                    <p class="text-sm font-bold text-slate-300" id="m_media_anual_global">R$ 0</p>
-                </div>
-                <div class="w-1/2">
-                    <p class="text-[10px] text-slate-400 uppercase">Média Mensal</p>
-                    <p class="text-sm font-bold text-slate-300" id="m_media_mensal_global">R$ 0</p>
-                </div>
-            </div>
-
         </div>
+
+        <div class="glass-panel p-6 flex flex-col justify-between hover:border-amber-500/50 transition-colors">
+            <h3
+                class="text-amber-500 font-bold uppercase tracking-widest text-sm mb-4 border-b border-amber-500/30 pb-2">
+                Globais (Histórico)</h3>
+            <div class="space-y-4">
+                <div>
+                    <p class="text-[11px] text-slate-400 uppercase font-bold">Bruto Total de Todos os Tempos</p>
+                    <p class="text-3xl font-bold text-amber-400" id="m_bruto_global">R$ 0,00</p>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <p class="text-[11px] text-slate-400 uppercase font-bold">Média Anual</p>
+                        <p class="text-xl font-bold text-amber-400/80" id="m_media_anual_global">R$ 0</p>
+                    </div>
+                    <div>
+                        <p class="text-[11px] text-slate-400 uppercase font-bold">Média Mensal</p>
+                        <p class="text-xl font-bold text-amber-400/80" id="m_media_mensal_global">R$ 0</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-700/50">
+                    <div>
+                        <p class="text-[10px] text-slate-400 uppercase font-bold">Média Semanal</p>
+                        <p class="text-lg font-bold text-slate-200" id="m_media_semanal_global">R$ 0</p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] text-slate-400 uppercase font-bold">Média Diária</p>
+                        <p class="text-lg font-bold text-slate-200" id="m_media_diaria_global">R$ 0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <div class="glass-panel p-6 mb-10">
@@ -337,53 +363,84 @@
                 atualizarDashboard();
             } catch (error) {
                 console.error("Erro na investigação:", error);
-                alert("🕵️ Sherlock: Não consegui encontrar o arquivo JSON! Verifique o console.");
+                alert("🕵️ Sherlock: Não consegui encontrar o arquivo JSON! Se a tela ficar vazia, abra este projeto usando o Live Server do Antigravity/VSCode.");
             }
         }
 
         function popularFiltros() {
-            const mesSelect = document.getElementById('mesSelect');
+            const anoSelect = document.getElementById('filtro-ano');
+            const mesSelect = document.getElementById('filtro-mes');
+            anoSelect.innerHTML = '';
             mesSelect.innerHTML = '';
 
-            const chavesMeses = Object.keys(db.meses).sort().reverse();
-
-            chavesMeses.forEach(chave => {
+            // Puxa os anos
+            const anos = Object.keys(db.anos).sort().reverse();
+            anos.forEach(ano => {
                 const option = document.createElement('option');
-                option.value = chave;
-                option.textContent = chave;
+                option.value = ano;
+                option.textContent = ano;
+                anoSelect.appendChild(option);
+            });
+
+            // Puxa os meses
+            const mesesNomes = {
+                "01": "Janeiro", "02": "Fevereiro", "03": "Março", "04": "Abril",
+                "05": "Maio", "06": "Junho", "07": "Julho", "08": "Agosto",
+                "09": "Setembro", "10": "Outubro", "11": "Novembro", "12": "Dezembro"
+            };
+
+            Object.keys(mesesNomes).forEach(num => {
+                const option = document.createElement('option');
+                option.value = num;
+                option.textContent = mesesNomes[num];
                 mesSelect.appendChild(option);
             });
+
+            // Seleciona a última data disponível
+            const chavesMeses = Object.keys(db.meses).sort().reverse();
+            if (chavesMeses.length > 0) {
+                const ultimoAnoMes = chavesMeses[0];
+                anoSelect.value = ultimoAnoMes.substring(0, 4);
+                mesSelect.value = ultimoAnoMes.substring(5, 7);
+            }
         }
 
         // 2. A MÁGICA DE ATUALIZAR TUDO NA TELA
         function atualizarDashboard() {
             if (!db) return;
 
-            const chaveMesSelecionado = document.getElementById('mesSelect').value;
-            const anoSelecionado = chaveMesSelecionado.substring(0, 4);
+            const anoSelecionado = document.getElementById('filtro-ano').value;
+            const mesSelecionado = document.getElementById('filtro-mes').value;
+            const chaveMesSelecionado = `${anoSelecionado}-${mesSelecionado}`;
 
-            const dadosMes = db.meses[chaveMesSelecionado];
-            const dadosAno = db.anos[anoSelecionado];
+            // Dados ou Fallback (Zera a tela se o mês não tiver corrida)
+            const dadosMes = db.meses[chaveMesSelecionado] || { bruto_mensal: 0, bruto_ultima_semana: 0, media_diaria_mes: 0, media_semanal_mes: 0, pagamentos_diarios: {} };
+            const dadosAno = db.anos[anoSelecionado] || { bruto_anual: 0, media_mensal_anual: 0, media_semanal_anual: 0 };
             const dadosGeral = db.geral;
 
-            // PREENCHER PAINEL LATERAL
+            // PREENCHER COLUNA 1: MÊS
             document.getElementById('m_bruto_mensal').innerText = formatarMoeda(dadosMes.bruto_mensal);
             document.getElementById('m_bruto_semanal').innerText = formatarMoeda(dadosMes.bruto_ultima_semana);
             document.getElementById('m_media_diaria').innerText = formatarMoeda(dadosMes.media_diaria_mes);
             document.getElementById('m_media_semanal').innerText = formatarMoeda(dadosMes.media_semanal_mes);
 
+            // PREENCHER COLUNA 2: ANO (Com nova média diária)
             document.getElementById('m_bruto_anual').innerText = formatarMoeda(dadosAno.bruto_anual);
             document.getElementById('m_media_mensal_ano').innerText = formatarMoeda(dadosAno.media_mensal_anual);
             document.getElementById('m_media_semanal_ano').innerText = formatarMoeda(dadosAno.media_semanal_anual);
+            document.getElementById('m_media_diaria_ano').innerText = formatarMoeda(dadosAno.media_diaria_anual || 0); // O || 0 evita erro se não houver dado
 
+            // PREENCHER COLUNA 3: GLOBAL (Com novas médias semanal e diária)
             document.getElementById('m_bruto_global').innerText = formatarMoeda(dadosGeral.bruto_total);
             document.getElementById('m_media_anual_global').innerText = formatarMoeda(dadosGeral.media_anual_global);
             document.getElementById('m_media_mensal_global').innerText = formatarMoeda(dadosGeral.media_mensal_global);
+            document.getElementById('m_media_semanal_global').innerText = formatarMoeda(dadosGeral.media_semanal_global || 0);
+            document.getElementById('m_media_diaria_global').innerText = formatarMoeda(dadosGeral.media_diaria_global || 0);
 
-            // DESENHAR O GRÁFICO 1 E A TABELA
+            // Gráfico de Pagamentos
             document.getElementById('tabelaTitulo').innerText = `Relatório de Pagamentos - ${chaveMesSelecionado}`;
 
-            const dataObjeto = new Date(anoSelecionado, parseInt(chaveMesSelecionado.substring(5, 7)), 0);
+            const dataObjeto = new Date(anoSelecionado, parseInt(mesSelecionado), 0);
             const totalDiasMes = dataObjeto.getDate();
 
             const labelsDias = [];
@@ -410,7 +467,7 @@
                         ? `<span class="text-emerald-500 font-bold uppercase text-[10px]">Meta Batida</span>`
                         : `<span class="text-rose-500 font-bold uppercase text-[10px]">Abaixo</span>`;
                     tr.innerHTML = `
-                        <td class="p-3 font-bold">${diaStr}/${chaveMesSelecionado.substring(5, 7)}/${anoSelecionado}</td>
+                        <td class="p-3 font-bold">${diaStr}/${mesSelecionado}/${anoSelecionado}</td>
                         <td class="p-3">Serviço/Repasse</td>
                         <td class="p-3 text-emerald-500 font-bold">${formatarMoeda(valorDia)}</td>
                         <td class="p-3 font-medium">${formatarMoeda(despesaDiaria)}</td>
@@ -427,36 +484,13 @@
                 data: {
                     labels: labelsDias,
                     datasets: [
-                        {
-                            label: 'Recebido no Dia',
-                            data: dadosValores,
-                            borderColor: '#10b981',
-                            backgroundColor: 'rgba(16, 185, 129, 0.2)',
-                            borderWidth: 3,
-                            tension: 0.4,
-                            fill: true,
-                            pointBackgroundColor: '#10b981',
-                            pointRadius: 3
-                        },
-                        {
-                            label: 'Meta Diária (Despesa)',
-                            data: linhaMeta,
-                            borderColor: '#e11d48',
-                            borderWidth: 2,
-                            borderDash: [5, 5],
-                            tension: 0,
-                            pointRadius: 0,
-                            fill: false
-                        }
+                        { label: 'Recebido no Dia', data: dadosValores, borderColor: '#10b981', backgroundColor: 'rgba(16, 185, 129, 0.2)', borderWidth: 3, tension: 0.4, fill: true, pointBackgroundColor: '#10b981', pointRadius: 3 },
+                        { label: 'Meta Diária (Despesa)', data: linhaMeta, borderColor: '#e11d48', borderWidth: 2, borderDash: [5, 5], tension: 0, pointRadius: 0, fill: false }
                     ]
                 },
                 options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    animation: false,
-                    plugins: {
-                        legend: { labels: { color: corTextoGrafico, font: { weight: 'bold' } } }
-                    },
+                    responsive: true, maintainAspectRatio: false, animation: false,
+                    plugins: { legend: { labels: { color: corTextoGrafico, font: { weight: 'bold' } } } },
                     scales: {
                         x: { ticks: { color: corTextoGrafico, font: { size: 10, weight: 'bold' } }, grid: { color: 'rgba(100,116,139,0.1)' } },
                         y: { ticks: { color: corTextoGrafico, font: { weight: 'bold' } }, grid: { color: 'rgba(100,116,139,0.1)' }, min: 0 }
@@ -501,36 +535,14 @@
                 data: {
                     labels: labelsMeses,
                     datasets: [
-                        {
-                            label: 'Depósito Mensal (Esforço)',
-                            data: dadosAporteMensal,
-                            borderColor: '#64748b',
-                            borderWidth: 2,
-                            borderDash: [5, 5],
-                            tension: 0,
-                            fill: false,
-                            pointRadius: 0
-                        },
-                        {
-                            label: 'Rendimento NO MÊS',
-                            data: dadosRendimentoDoMes,
-                            borderColor: '#2563eb',
-                            backgroundColor: 'rgba(37, 99, 235, 0.2)',
-                            borderWidth: 3,
-                            tension: 0.4,
-                            fill: true,
-                            pointRadius: 0
-                        }
+                        { label: 'Depósito Mensal (Esforço)', data: dadosAporteMensal, borderColor: '#64748b', borderWidth: 2, borderDash: [5, 5], tension: 0, fill: false, pointRadius: 0 },
+                        { label: 'Rendimento NO MÊS', data: dadosRendimentoDoMes, borderColor: '#2563eb', backgroundColor: 'rgba(37, 99, 235, 0.2)', borderWidth: 3, tension: 0.4, fill: true, pointRadius: 0 }
                     ]
                 },
                 options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    animation: false,
+                    responsive: true, maintainAspectRatio: false, animation: false,
                     interaction: { mode: 'index', intersect: false },
-                    plugins: {
-                        legend: { labels: { color: corTextoGrafico, font: { weight: 'bold' } } }
-                    },
+                    plugins: { legend: { labels: { color: corTextoGrafico, font: { weight: 'bold' } } } },
                     scales: {
                         x: { ticks: { color: corTextoGrafico, font: { weight: 'bold' } }, grid: { display: false } },
                         y: { ticks: { color: corTextoGrafico, font: { weight: 'bold' } }, grid: { color: 'rgba(100,116,139,0.1)' } }
@@ -556,7 +568,6 @@
 
             if (!mensagem) return;
 
-            // O Espantalho: Trava de 10 perguntas usando o cache do navegador
             let contagem = parseInt(localStorage.getItem('limite_rag_moeda') || '0');
             if (contagem >= 10) {
                 adicionarBalao("⚠️ Você atingiu o limite de 10 interações diárias de teste neste painel. Retorne amanhã ou clone o projeto para usar sem limites!", 'bot');
@@ -565,41 +576,45 @@
                 return;
             }
 
-            // Exibe a pergunta do usuário
             adicionarBalao(mensagem, 'user');
             input.value = '';
             input.disabled = true;
             btn.disabled = true;
 
-            // Computa o gasto na cota local
             localStorage.setItem('limite_rag_moeda', contagem + 1);
 
-            // Balão de loading
             const idPensando = "msg-" + Date.now();
             adicionarBalao("Analisando os dados e a filosofia do projeto...", 'bot', idPensando);
 
+            // A MÁGICA DO FRONT-END: Captura os filtros atuais
+            const anoAtual = document.getElementById('filtro-ano').value;
+            const mesAtual = document.getElementById('filtro-mes').value;
+            const contextoInvisivel = `O usuário está visualizando a tela filtrada para o Ano: ${anoAtual} e Mês: ${mesAtual}. Se a pergunta for sobre métricas ou o melhor/pior dia, baseie-se preferencialmente neste período específico do JSON.`;
+
             try {
-                // A Ponte: Chama o garçom Python que está rodando na sua máquina
-                const resposta = await fetch('http://127.0.0.1:5000/chat', {
+                // Ponte com o Python (enviando a fofoca do filtro junto)
+                const resposta = await fetch('http://127.0.0.1:5000/chat', { // <-- Mude para a URL do Render quando for publicar
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ mensagem: mensagem })
+                    body: JSON.stringify({
+                        mensagem: mensagem,
+                        contexto_tela: contextoInvisivel
+                    })
                 });
 
                 const dados = await resposta.json();
-                document.getElementById(idPensando).remove(); // Tira o loading
+                document.getElementById(idPensando).remove();
 
                 if (dados.erro) {
                     adicionarBalao("Erro no servidor: " + dados.erro, 'bot');
                 } else {
-                    // Substitui quebras de linha normais por <br> para o HTML entender
                     const textoFormatado = dados.resposta.replace(/\n/g, '<br>');
                     adicionarBalao(textoFormatado, 'bot');
                 }
 
             } catch (erro) {
                 document.getElementById(idPensando).remove();
-                adicionarBalao("🚨 Sem conexão com a Matriz. Verifique se o servidor Python (servidor.py) está rodando no terminal.", 'bot');
+                adicionarBalao("🚨 Sem conexão com a Matriz. Verifique se o servidor Python está rodando.", 'bot');
             }
 
             input.disabled = false;
@@ -620,9 +635,9 @@
 
             div.innerHTML = texto;
             box.appendChild(div);
-            // Faz a barra de rolagem descer automaticamente
             box.scrollTop = box.scrollHeight;
         }
+
         // INICIALIZA O SISTEMA
         atualizarGraficoInvestimentos();
         iniciarSistema();

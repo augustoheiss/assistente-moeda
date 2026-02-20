@@ -59,9 +59,10 @@ sessao_chat = None
 def conversar():
     global sessao_chat
     
-    # Pega a pergunta que o HTML enviou
+    # Pega os dados que o HTML enviou
     dados_recebidos = request.get_json()
     pergunta = dados_recebidos.get("mensagem")
+    contexto_tela = dados_recebidos.get("contexto_tela", "O usuário está vendo o painel geral.")
 
     if not pergunta:
         return jsonify({"erro": "Nenhuma mensagem foi enviada."}), 400
@@ -74,9 +75,15 @@ def conversar():
         )
         sessao_chat = client.chats.create(model="gemini-2.5-flash", config=config)
 
+    # A MÁGICA: Injetamos o filtro invisivelmente na pergunta do usuário!
+    pergunta_enriquecida = f"[INFORMAÇÃO DO SISTEMA: {contexto_tela}]\n\nPergunta do usuário: {pergunta}"
+
     # Envia para o Gemini e devolve para o HTML
     try:
-        resposta = sessao_chat.send_message(pergunta)
+        # Imprime no terminal só para você (Arquiteto) ver a mágica acontecendo
+        print(f"Enviando para a IA: {pergunta_enriquecida}") 
+        
+        resposta = sessao_chat.send_message(pergunta_enriquecida)
         return jsonify({"resposta": resposta.text})
     except Exception as e:
         return jsonify({"erro": f"Erro na matriz: {str(e)}"}), 500
