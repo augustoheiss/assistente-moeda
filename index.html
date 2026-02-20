@@ -593,7 +593,7 @@
 
             try {
                 // Ponte com o Python (enviando a fofoca do filtro junto)
-                const resposta = await fetch('http://127.0.0.1:5000/chat', { // <-- Mude para a URL do Render quando for publicar
+                const resposta = await fetch('https://api-assistente-moeda.onrender.com/chat', { // <-- Mude para a URL do Render quando for publicar
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
