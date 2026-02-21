@@ -419,13 +419,13 @@
             const dadosAno = db.anos[anoSelecionado] || { bruto_anual: 0, media_mensal_anual: 0, media_semanal_anual: 0 };
             const dadosGeral = db.geral;
 
-            // PREENCHER OS 3 PAINÉIS DO TOPO COM OS DADOS DINÂMICOS DO PYTHON
-            document.getElementById('painel_custo_anual').innerText = formatarMoeda(dadosGeral.custo_anual_veiculo);
-            document.getElementById('painel_meta_semanal').innerText = formatarMoeda(dadosGeral.meta_semanal);
-            document.getElementById('painel_meta_diaria').innerText = formatarMoeda(dadosGeral.meta_diaria);
+            // PREENCHER OS 3 PAINÉIS DO TOPO COM DADOS DINÂMICOS OU VALORES FIXOS DA VITRINE
+            document.getElementById('painel_custo_anual').innerText = formatarMoeda(dadosGeral.custo_anual_veiculo || 38000.00);
+            document.getElementById('painel_meta_semanal').innerText = formatarMoeda(dadosGeral.meta_semanal || 730.76);
+            document.getElementById('painel_meta_diaria').innerText = formatarMoeda(dadosGeral.meta_diaria || 104.10);
 
-            // Define a nova linha vermelha tracejada do gráfico baseada na meta do Python
-            const despesaDiaria = dadosGeral.meta_diaria;
+            // Define a nova linha vermelha tracejada do gráfico com proteção
+            const despesaDiaria = dadosGeral.meta_diaria || 104.10;
 
             // PREENCHER COLUNA 1: MÊS
             document.getElementById('m_bruto_mensal').innerText = formatarMoeda(dadosMes.bruto_mensal);
