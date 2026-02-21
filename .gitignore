@@ -205,3 +205,8 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+pagamentos_reais.csv
+cofre_processado.json
+processar_dados.py
+indexlocal.html

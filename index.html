@@ -141,17 +141,17 @@
     </header>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-        <div class="glass-panel p-6 text-center w-full">
-            <h3 class="text-lg text-slate-300">Custo Anual (Veículo)</h3>
-            <p class="text-3xl font-bold text-rose-400">R$ 38.000,00</p>
+        <div class="glass-panel p-6 text-center w-full hover:border-rose-500/50 transition-colors">
+            <h3 class="text-lg text-slate-300 font-bold tracking-wider uppercase text-xs">Custo Anual (Veículo)</h3>
+            <p class="text-3xl font-bold text-rose-400 mt-2" id="painel_custo_anual">R$ 0,00</p>
         </div>
-        <div class="glass-panel p-6 text-center w-full">
-            <h3 class="text-lg text-slate-300">Meta Semanal</h3>
-            <p class="text-3xl font-bold text-amber-400">R$ 730,76</p>
+        <div class="glass-panel p-6 text-center w-full hover:border-amber-500/50 transition-colors">
+            <h3 class="text-lg text-slate-300 font-bold tracking-wider uppercase text-xs">Meta Semanal</h3>
+            <p class="text-3xl font-bold text-amber-400 mt-2" id="painel_meta_semanal">R$ 0,00</p>
         </div>
-        <div class="glass-panel p-6 text-center w-full">
-            <h3 class="text-lg text-slate-300">Meta Diária</h3>
-            <p class="text-3xl font-bold text-emerald-400">R$ 104,10</p>
+        <div class="glass-panel p-6 text-center w-full hover:border-emerald-500/50 transition-colors">
+            <h3 class="text-lg text-slate-300 font-bold tracking-wider uppercase text-xs">Meta Diária</h3>
+            <p class="text-3xl font-bold text-emerald-400 mt-2" id="painel_meta_diaria">R$ 0,00</p>
         </div>
     </div>
 
@@ -347,16 +347,17 @@
     <script>
         const formatarMoeda = (valor) => valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
         const corTextoGrafico = '#64748b';
-        const despesaDiaria = 104.10;
+
 
         let db = null;
         let pagamentosChart = null;
         let investimentosChart = null;
+        let servidorAcordado = false;
 
         // 1. CARREGAR OS DADOS DO JSON
         async function iniciarSistema() {
             try {
-                const response = await fetch('dados_processados.json');
+                const response = await fetch('cofre_processado.json');
                 db = await response.json();
 
                 popularFiltros();
@@ -417,6 +418,14 @@
             const dadosMes = db.meses[chaveMesSelecionado] || { bruto_mensal: 0, bruto_ultima_semana: 0, media_diaria_mes: 0, media_semanal_mes: 0, pagamentos_diarios: {} };
             const dadosAno = db.anos[anoSelecionado] || { bruto_anual: 0, media_mensal_anual: 0, media_semanal_anual: 0 };
             const dadosGeral = db.geral;
+
+            // PREENCHER OS 3 PAINÉIS DO TOPO COM OS DADOS DINÂMICOS DO PYTHON
+            document.getElementById('painel_custo_anual').innerText = formatarMoeda(dadosGeral.custo_anual_veiculo);
+            document.getElementById('painel_meta_semanal').innerText = formatarMoeda(dadosGeral.meta_semanal);
+            document.getElementById('painel_meta_diaria').innerText = formatarMoeda(dadosGeral.meta_diaria);
+
+            // Define a nova linha vermelha tracejada do gráfico baseada na meta do Python
+            const despesaDiaria = dadosGeral.meta_diaria;
 
             // PREENCHER COLUNA 1: MÊS
             document.getElementById('m_bruto_mensal').innerText = formatarMoeda(dadosMes.bruto_mensal);
@@ -583,17 +592,36 @@
 
             localStorage.setItem('limite_rag_moeda', contagem + 1);
 
+            // --- A MÁGICA DO DESPERTADOR (WAKE-UP CALL) ---
+            if (!servidorAcordado) {
+                const idDespertador = "msg-despertador-" + Date.now();
+                adicionarBalao("⏳ Olá! Como uso um servidor gratuito, estou ligando os motores da IA. Isso leva cerca de 40 a 50 segundos na primeira vez do dia. Só um momento...", 'bot', idDespertador);
+
+                try {
+                    // Bate na porta do Render só para acordar a máquina (não aciona o Gemini)
+                    await fetch('https://api-assistente-moeda.onrender.com/ping');
+                    servidorAcordado = true; // A máquina acordou!
+                    document.getElementById(idDespertador).remove(); // Tira a mensagem de espera
+                } catch (e) {
+                    document.getElementById(idDespertador).remove();
+                    adicionarBalao("🚨 Falha ao acordar o servidor. Verifique a conexão.", 'bot');
+                    input.disabled = false;
+                    btn.disabled = false;
+                    input.focus();
+                    return;
+                }
+            }
+            // ----------------------------------------------
+
             const idPensando = "msg-" + Date.now();
             adicionarBalao("Analisando os dados e a filosofia do projeto...", 'bot', idPensando);
 
-            // A MÁGICA DO FRONT-END: Captura os filtros atuais
             const anoAtual = document.getElementById('filtro-ano').value;
             const mesAtual = document.getElementById('filtro-mes').value;
             const contextoInvisivel = `O usuário está visualizando a tela filtrada para o Ano: ${anoAtual} e Mês: ${mesAtual}. Se a pergunta for sobre métricas ou o melhor/pior dia, baseie-se preferencialmente neste período específico do JSON.`;
 
             try {
-                // Ponte com o Python (enviando a fofoca do filtro junto)
-                const resposta = await fetch('https://api-assistente-moeda.onrender.com/chat', { // <-- Mude para a URL do Render quando for publicar
+                const resposta = await fetch('https://api-assistente-moeda.onrender.com/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -614,7 +642,7 @@
 
             } catch (erro) {
                 document.getElementById(idPensando).remove();
-                adicionarBalao("🚨 Sem conexão com a Matriz. Verifique se o servidor Python está rodando.", 'bot');
+                adicionarBalao("🚨 Sem conexão com a Matriz.", 'bot');
             }
 
             input.disabled = false;

@@ -55,6 +55,11 @@ CONTEXTO OBRIGATÓRIO:
 # Variável global para manter a memória da conversa viva enquanto o servidor roda
 sessao_chat = None
 
+# Rota de "Campainha" para acordar o Render sem gastar tokens da IA
+@app.route('/ping', methods=['GET', 'POST', 'OPTIONS'])
+def ping():
+    return jsonify({"status": "acordado"}), 200
+
 @app.route('/chat', methods=['POST'])
 def conversar():
     global sessao_chat
