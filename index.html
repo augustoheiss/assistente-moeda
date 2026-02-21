@@ -357,7 +357,7 @@
         // 1. CARREGAR OS DADOS DO JSON
         async function iniciarSistema() {
             try {
-                const response = await fetch('cofre_processado.json');
+                const response = await fetch('dados_processados.json');
                 db = await response.json();
 
                 popularFiltros();
