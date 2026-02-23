@@ -134,6 +134,11 @@
         </button>
     </div>
 
+    <button onclick="abrirModalGuia()"
+        class="ml-4 bg-indigo-600/20 border border-indigo-500/50 hover:bg-indigo-600/40 text-indigo-300 px-4 py-2 rounded-lg transition-colors text-sm font-bold flex items-center gap-2">
+        <span>📖</span> Guia do Asfalto
+    </button>
+
     <header class="mb-10 text-center">
         <h1 class="text-4xl font-bold text-emerald-400 mb-2">A Função da Moeda</h1>
         <p class="text-slate-400 italic font-semibold">"O segundo atual e o segundo seguinte. Deixando o dinheiro no
@@ -343,6 +348,92 @@
             <path d="m3 21 1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z" />
         </svg>
     </button>
+
+    <div id="modal-guia" onclick="fecharModalGuia()"
+        class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity">
+        <div onclick="event.stopPropagation()"
+            class="glass-panel w-full max-w-4xl max-h-[85vh] overflow-y-auto rounded-2xl border border-slate-700 bg-slate-900/90 p-8 shadow-2xl relative custom-scrollbar">
+
+            <button onclick="fecharModalGuia()"
+                class="absolute top-6 right-6 text-slate-400 hover:text-rose-400 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+
+            <h2 class="text-2xl md:text-3xl font-bold text-indigo-400 mb-6 flex items-center gap-3">
+                <span>🚦</span> A Realidade do Asfalto: Guia de Sobrevivência e Lucro
+            </h2>
+
+            <div class="space-y-6 text-slate-300 leading-relaxed">
+                <p>Está pensando em trabalhar com aplicativos de mobilidade? Ouviu falar que motoristas conseguem
+                    faturar mais de R$ 100 mil por ano e quer entrar nessa estatística? Antes de ligar o motor, pese
+                    todas as variáveis na balança.</p>
+
+                <p>A matemática é implacável: se você recebe R$ 100 mil, mas os custos operacionais da sua "máquina"
+                    (seja um carro popular ou um sedã premium) engolem R$ 80 mil entre combustível, depreciação e
+                    manutenção, não sobra dinheiro; sobram contas. Para um motorista de aplicativo realmente lucrar de
+                    forma significativa, a jornada raramente é inferior a 10 horas diárias. Se você ganha um pouco menos
+                    em outro emprego, mas trabalha 6 horas por dia, faça as contas da sua hora de vida.</p>
+
+                <p>Se, após essa reflexão, essa for a sua solução, e você já está com a máquina no seu nome pronta para
+                    operar, a regra muda. Você deixou de ser motorista e passou a ser o <strong
+                        class="text-white">Gestor de uma Frota de um Carro Só</strong>. Aqui estão as táticas práticas
+                    para fazer a moeda trabalhar para você:</p>
+
+                <hr class="border-slate-700 my-6">
+
+                <h3 class="text-xl font-bold text-amber-400 mt-8 mb-4">1. A Estratégia do Sniper (Aceitação de Corridas)
+                </h3>
+                <ul class="list-disc pl-6 space-y-3">
+                    <li><strong class="text-white">Esqueça a "Sorte", Opere no Padrão:</strong> Não dirija a esmo
+                        gastando combustível e pneu. O lucro verdadeiro mora nos horários de pico (início da manhã, fim
+                        da tarde), dias de chuva, saída de grandes eventos e áreas nobres.</li>
+                    <li><strong class="text-white">O Custo do Quilômetro Vazio:</strong> Pelo menos 30% a 40% do seu
+                        tempo o carro roda vazio. Uma corrida que paga "bem", mas te joga para uma cidade vizinha sem
+                        demanda de volta, é um prejuízo disfarçado. Calcule sempre o deslocamento de ida e o retorno.
+                    </li>
+                    <li><strong class="text-white">O "Falso Líquido":</strong> O seu lucro não é o valor da corrida
+                        menos a gasolina/energia. Pneus, pastilhas, óleo, seguro, IPVA e a desvalorização cobram um
+                        pedágio invisível de dezenas de centavos a cada quilômetro. Se a corrida não cobre o custo
+                        invisível, recuse.</li>
+                </ul>
+
+                <h3 class="text-xl font-bold text-amber-400 mt-8 mb-4">2. Inteligência Geográfica e Segurança</h3>
+                <ul class="list-disc pl-6 space-y-3">
+                    <li><strong class="text-white">Posicionamento é Ouro:</strong> É mais lucrativo ficar parado 15
+                        minutos em um local estratégico com o motor desligado esperando o algoritmo inflar o preço do
+                        que rodar desesperado caçando chamadas.</li>
+                    <li><strong class="text-white">Filtro de Clientes:</strong> A sua segurança é o seu maior ativo.
+                        Avalie a nota do passageiro rigorosamente. Evite embarques em áreas de risco mapeadas,
+                        especialmente à noite. Uma Dashcam não é gasto, é seguro de vida e de conta no aplicativo.</li>
+                </ul>
+
+                <h3 class="text-xl font-bold text-amber-400 mt-8 mb-4">3. O Domínio da Máquina (Eficiência)</h3>
+                <ul class="list-disc pl-6 space-y-3">
+                    <li><strong class="text-white">Conheça o seu Motor:</strong> Se você opera um híbrido plug-in (como
+                        o BYD King), o seu diferencial competitivo é rodar o máximo possível na bateria com o custo de
+                        energia da tomada de casa, diluindo o uso da gasolina apenas para manter a autonomia.</li>
+                    <li><strong class="text-white">Metas Diárias, Não Mensais:</strong> Use o <em>Assistente Moeda</em>
+                        para quebrar o seu IPVA e Seguro em metas diárias (ex: "Preciso de R$ 86,00 por dia"). Bateu a
+                        meta do carro e a do seu bolso? Desligue o aplicativo e vá viver. A exaustão causa acidentes.
+                    </li>
+                </ul>
+
+                <hr class="border-slate-700 my-6">
+
+                <div class="bg-rose-900/20 border-l-4 border-rose-500 p-6 rounded-r-lg mt-8">
+                    <h3 class="text-lg font-bold text-rose-400 mb-2">O Veredito Final</h3>
+                    <p class="text-sm">Resumindo: se você tem outras opções de trabalho que possibilitam estudar, se
+                        envolver em projetos diferentes e estar presente com a família, repense. Dependendo da sua
+                        rotina, colocar tudo na ponta do lápis vai te provar que utilizar o Uber como passageiro é
+                        absurdamente mais barato do que manter o próprio carro. Mas, se for assumir o volante, faça isso
+                        com a frieza dos números. Tire a intuição de cena e coloque o custo real na tela.</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
         const formatarMoeda = (valor) => valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -665,6 +756,27 @@
             box.appendChild(div);
             box.scrollTop = box.scrollHeight;
         }
+
+        // --- FUNÇÕES DO MODAL ---
+        function abrirModalGuia() {
+            document.getElementById('modal-guia').classList.remove('hidden');
+            document.body.style.overflow = 'hidden'; // Trava o scroll do fundo
+        }
+
+        function fecharModalGuia() {
+            document.getElementById('modal-guia').classList.add('hidden');
+            document.body.style.overflow = 'auto'; // Destrava o scroll do fundo
+        }
+
+        // Fechar Modal apertando a tecla ESC
+        document.addEventListener('keydown', function (event) {
+            if (event.key === "Escape") {
+                const modal = document.getElementById('modal-guia');
+                if (!modal.classList.contains('hidden')) {
+                    fecharModalGuia();
+                }
+            }
+        });
 
         // INICIALIZA O SISTEMA
         atualizarGraficoInvestimentos();
