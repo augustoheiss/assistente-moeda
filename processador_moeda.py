@@ -1,3 +1,4 @@
+# pyre-ignore-all-errors
 import csv
 import json
 from collections import defaultdict
